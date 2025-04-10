@@ -1,0 +1,5 @@
+# Ignore large build files
+dist/
+node_modules/
+*.dmg
+*.zip

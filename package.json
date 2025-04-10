@@ -1,0 +1,66 @@
+{
+  "name": "task-list",
+  "version": "1.0.0",
+  "description": "A simple task list application with daily progress tracking",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "make:mac": "electron-builder --mac"
+  },
+  "keywords": [
+    "electron",
+    "task",
+    "todo"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^3.1.0",
+    "date-fns": "^4.1.0",
+    "electron-store": "^8.1.0",
+    "photonkit": "^0.1.2"
+  },
+  "devDependencies": {
+    "electron": "^28.2.1",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.task-list.app",
+    "productName": "GSD",
+    "icon": "assets/icon.png",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "darkModeSupport": true
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "window": {
+        "width": 540,
+        "height": 380
+      },
+      "backgroundColor": "#f0f0f0",
+      "icon": "assets/icon.png",
+      "title": "Install GSD",
+      "iconSize": 100,
+      "internetEnabled": false
+    }
+  }
+}

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GSD 🔥</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>GSD 🔥</h1>
+      <button id="calendar-btn" class="calendar-toggle-btn" title="Open Calendar">📅</button>
+    </div>
+    
+    <!-- Current date display (no interaction) -->
+    <div id="current-date" class="current-date">Wednesday, April 9, 2025</div>
+    
+    <!-- Date navigation section -->
+    <div class="date-navigation">
+      <button id="yesterday-btn" class="date-nav-btn">Yesterday</button>
+      <button id="today-btn" class="date-nav-btn active">Today</button>
+      <button id="tomorrow-btn" class="date-nav-btn">Tomorrow</button>
+    </div>
+    
+    <div class="progress-container">
+      <div class="progress-label">
+        <span id="completed-count">0</span>/<span id="total-count">0</span> Tasks Completed
+      </div>
+      <div class="progress-bar-container">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+    </div>
+    
+    <!-- Category management section -->
+    <div class="category-container">
+      <div class="category-tabs" id="category-tabs">
+        <!-- Categories will be inserted here dynamically -->
+      </div>
+      <div class="category-actions">
+        <button id="add-category-btn" title="Add new category">+</button>
+      </div>
+    </div>
+    
+    <div class="task-form">
+      <input type="text" id="new-task-input" placeholder="Add a new task...">
+      <button id="add-task-btn">Add</button>
+    </div>
+    
+    <ul id="task-list" class="task-list"></ul>
+  </div>
+  
+  <!-- Category dialog -->
+  <div class="modal" id="category-modal">
+    <div class="modal-content">
+      <span class="close-button" id="close-category-modal">&times;</span>
+      <h2>Add Category</h2>
+      <div class="modal-form">
+        <input type="text" id="new-category-input" placeholder="Category name...">
+        <button id="save-category-btn">Save</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Move task dialog -->
+  <div class="modal" id="move-task-modal">
+    <div class="modal-content">
+      <span class="close-button" id="close-move-task-modal">&times;</span>
+      <h2>Move Task</h2>
+      <div class="modal-form">
+        <label for="move-date-input">Select date:</label>
+        <input type="date" id="move-date-input">
+        <button id="save-move-task-btn">Move</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Calendar modal -->
+  <div class="modal" id="calendar-modal">
+    <div class="modal-content calendar-modal-content">
+      <span class="close-button" id="close-calendar-modal">&times;</span>
+      <h2>Calendar</h2>
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <button id="prev-month-btn" class="calendar-nav-btn">&lt;</button>
+          <h3 id="current-month">April 2025</h3>
+          <button id="next-month-btn" class="calendar-nav-btn">&gt;</button>
+        </div>
+        <div class="calendar-grid">
+          <div class="calendar-weekdays">
+            <div>Sun</div>
+            <div>Mon</div>
+            <div>Tue</div>
+            <div>Wed</div>
+            <div>Thu</div>
+            <div>Fri</div>
+            <div>Sat</div>
+          </div>
+          <div id="calendar-days" class="calendar-days">
+            <!-- Calendar days will be populated dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Focus timer modal -->
+  <div class="modal" id="focus-modal">
+    <div class="modal-content focus-modal-content">
+      <h2>Focus Mode</h2>
+      <div class="focus-task-name">Working on: <span id="focus-task-name"></span></div>
+      <div class="focus-timer-container">
+        <div class="focus-timer" id="focus-timer" contenteditable="true">25:00</div>
+        <div class="focus-mode-indicator">
+          <span id="focus-mode-indicator">Work Time</span>
+        </div>
+        <div class="focus-sessions">
+          <span>Sessions: <span id="focus-session-count">0</span></span>
+        </div>
+      </div>
+      <div class="focus-controls">
+        <button id="focus-start-btn" class="focus-control-btn">Start</button>
+        <button id="focus-pause-btn" class="focus-control-btn">Pause</button>
+        <button id="focus-reset-btn" class="focus-control-btn">Reset</button>
+      </div>
+      <div class="focus-actions">
+        <button id="focus-done-btn" class="focus-action-btn">Done</button>
+        <button id="focus-cancel-btn" class="focus-action-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  <audio id="notification-sound" src="assets/sounds/notification.mp3" preload="auto"></audio>
+  
+  <script src="renderer.js"></script>
+</body>
+</html>
