@@ -5,6 +5,11 @@ const taskList = document.getElementById('task-list');
 const completedCount = document.getElementById('completed-count');
 const totalCount = document.getElementById('total-count');
 const progressBar = document.getElementById('progress-bar');
+const categoryLabel = document.getElementById('category-label');
+const overallCompletedCount = document.getElementById('overall-completed-count');
+const overallTotalCount = document.getElementById('overall-total-count');
+const overallProgressBar = document.getElementById('overall-progress-bar');
+const overallProgressContainer = document.getElementById('overall-progress-container');
 const categoryTabs = document.getElementById('category-tabs');
 const addCategoryBtn = document.getElementById('add-category-btn');
 const categoryModal = document.getElementById('category-modal');
@@ -30,6 +35,8 @@ const moveTaskModal = document.getElementById('move-task-modal');
 const closeMoveTaskModal = document.getElementById('close-move-task-modal');
 const moveDateInput = document.getElementById('move-date-input');
 const saveMoveTaskBtn = document.getElementById('save-move-task-btn');
+const movePrevDayBtn = document.getElementById('move-prev-day-btn');
+const moveNextDayBtn = document.getElementById('move-next-day-btn');
 
 // Focus-related elements
 const focusModal = document.getElementById('focus-modal');
@@ -124,6 +131,26 @@ saveMoveTaskBtn.addEventListener('click', async () => {
     currentTaskToMove = null;
     await loadTasks();
     updateActiveDateButton();
+  }
+});
+
+// Move to previous day
+movePrevDayBtn.addEventListener('click', () => {
+  if (moveDateInput.value) {
+    const currentDate = new Date(moveDateInput.value);
+    const prevDay = new Date(currentDate);
+    prevDay.setDate(prevDay.getDate() - 1);
+    moveDateInput.value = prevDay.toISOString().split('T')[0];
+  }
+});
+
+// Move to next day
+moveNextDayBtn.addEventListener('click', () => {
+  if (moveDateInput.value) {
+    const currentDate = new Date(moveDateInput.value);
+    const nextDay = new Date(currentDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    moveDateInput.value = nextDay.toISOString().split('T')[0];
   }
 });
 
@@ -327,10 +354,25 @@ async function setActiveCategory(category) {
     newTaskInput.disabled = true;
     addTaskBtn.disabled = true;
     newTaskInput.placeholder = 'Select a specific category to add tasks...';
+    categoryLabel.textContent = '';
+    overallProgressContainer.classList.add('hidden');
   } else {
     newTaskInput.disabled = false;
     addTaskBtn.disabled = false;
     newTaskInput.placeholder = 'Add a new task...';
+    categoryLabel.textContent = `${category}: `;
+    
+    // Show overall progress when a specific category is selected
+    overallProgressContainer.classList.remove('hidden');
+    
+    // Get all tasks for the current day to calculate overall progress
+    // We use the current active date (stored in the activeDate variable)
+    const allTasks = await window.taskAPI.getTasks();
+    const tasksForCurrentDay = allTasks.filter(task => task.date === activeDate);
+    const completedTasksForDay = tasksForCurrentDay.filter(task => task.completed).length;
+    
+    // Update overall progress bar for the current day
+    updateOverallProgressBar(completedTasksForDay, tasksForCurrentDay.length);
   }
   
   // Get the tasks for the active category and render them
@@ -671,6 +713,18 @@ async function renderTasks() {
     });
     dropdownContent.appendChild(moveOption);
     
+    // Add Move to Next Day option
+    const moveToNextDayOption = document.createElement('a');
+    moveToNextDayOption.href = '#';
+    moveToNextDayOption.textContent = 'Move to Next Day';
+    moveToNextDayOption.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      await moveTaskToNextDay(task.id);
+      closeAllDropdowns();
+    });
+    dropdownContent.appendChild(moveToNextDayOption);
+    
     // Add Delete option
     const deleteOption = document.createElement('a');
     deleteOption.href = '#';
@@ -734,6 +788,15 @@ function updateProgressBar(completed, total) {
   
   const progressPercentage = total > 0 ? (completed / total) * 100 : 0;
   progressBar.style.width = `${progressPercentage}%`;
+}
+
+// Function to update overall progress bar
+function updateOverallProgressBar(completed, total) {
+  overallCompletedCount.textContent = completed;
+  overallTotalCount.textContent = total;
+  
+  const progressPercentage = total > 0 ? (completed / total) * 100 : 0;
+  overallProgressBar.style.width = `${progressPercentage}%`;
 }
 
 // Add event listeners for Focus buttons
@@ -997,5 +1060,23 @@ async function renderCalendar(month, year) {
     
     dayElement.appendChild(dayNumber);
     calendarDays.appendChild(dayElement);
+  }
+}
+
+// Function to move a task to the next day
+async function moveTaskToNextDay(taskId) {
+  const taskIndex = tasks.findIndex(task => task.id === taskId);
+  if (taskIndex !== -1) {
+    const task = tasks[taskIndex];
+    const currentDate = new Date(task.date);
+    const nextDay = new Date(currentDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    const nextDayFormatted = nextDay.toISOString().split('T')[0];
+    
+    // Use the correct API method to move the task date
+    await window.taskAPI.moveTaskDate(taskId, nextDayFormatted);
+    
+    // Reload tasks
+    await loadTasks();
   }
 }

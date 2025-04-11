@@ -47,6 +47,7 @@ h1 {
   background-color: #2c2c2e;
   border-radius: 4px;
   overflow: hidden;
+  margin-bottom: 10px;
 }
 
 .progress-bar {
@@ -54,6 +55,31 @@ h1 {
   background-color: #0a84ff;
   width: 0%;
   transition: width 0.3s ease;
+}
+
+.overall-progress-container {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #3a3a3c;
+}
+
+.overall-progress-bar-container {
+  height: 8px;
+  background-color: #2c2c2e;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.overall-progress-bar {
+  height: 100%;
+  background-color: #66bb6a; /* Different color for overall progress */
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.hidden {
+  display: none;
 }
 
 /* Category Styles */
@@ -621,6 +647,60 @@ h1 {
   color: #fff;
 }
 
+.move-quick-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.quick-move-btn {
+  flex: 1;
+  padding: 8px 10px;
+  background-color: #2c2c2e;
+  color: #f5f5f7;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.quick-move-btn:hover {
+  background-color: #3a3a3c;
+}
+
+.primary-btn {
+  padding: 10px 15px;
+  background-color: #0a84ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.primary-btn:hover {
+  background-color: #0a8dff;
+}
+
+#move-task-btn {
+  padding: 10px 15px;
+  background-color: #0a84ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+#move-task-btn:hover {
+  background-color: #0a8dff;
+}
+
 /* Calendar Modal */
 .calendar-modal-content {
   max-width: 400px;
@@ -709,6 +789,7 @@ h1 {
   color: #666;
   font-size: 16px;
   transition: color 0.2s;
+  padding: 8px;
 }
 
 .settings-icon:hover {

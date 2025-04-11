@@ -25,10 +25,21 @@
     
     <div class="progress-container">
       <div class="progress-label">
+        <span id="category-label">Category: </span>
         <span id="completed-count">0</span>/<span id="total-count">0</span> Tasks Completed
       </div>
       <div class="progress-bar-container">
         <div id="progress-bar" class="progress-bar"></div>
+      </div>
+      
+      <div id="overall-progress-container" class="overall-progress-container hidden">
+        <div class="progress-label">
+          <span>All Categories (Today): </span>
+          <span id="overall-completed-count">0</span>/<span id="overall-total-count">0</span> Tasks Completed
+        </div>
+        <div class="progress-bar-container">
+          <div id="overall-progress-bar" class="progress-bar overall-bar"></div>
+        </div>
       </div>
     </div>
     
@@ -70,7 +81,11 @@
       <div class="modal-form">
         <label for="move-date-input">Select date:</label>
         <input type="date" id="move-date-input">
-        <button id="save-move-task-btn">Move</button>
+        <div class="move-quick-buttons">
+          <button id="move-prev-day-btn" class="quick-move-btn">Previous Day</button>
+          <button id="move-next-day-btn" class="quick-move-btn">Next Day</button>
+        </div>
+        <button id="save-move-task-btn" class="primary-btn">Move</button>
       </div>
     </div>
   </div>
