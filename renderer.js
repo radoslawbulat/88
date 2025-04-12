@@ -369,8 +369,7 @@ async function setActiveCategory(category) {
     newTaskInput.disabled = false;
     addTaskBtn.disabled = false;
     newTaskInput.placeholder = 'Add a new task...';
-    categoryLabel.textContent = `${category}: `;
-    
+    categoryLabel.textContent = `${category}: \u00A0`; // Adding non-breaking space after the colon
     // Show overall progress when a specific category is selected
     overallProgressContainer.classList.remove('hidden');
     

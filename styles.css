@@ -52,7 +52,7 @@ h1 {
 
 .progress-bar {
   height: 100%;
-  background-color: #0a84ff;
+  background-color: #58E5BB;
   width: 0%;
   transition: width 0.3s ease;
 }
@@ -73,7 +73,7 @@ h1 {
 
 .overall-progress-bar {
   height: 100%;
-  background-color: #66bb6a; /* Different color for overall progress */
+  background-color: #58E5BB;
   width: 0%;
   transition: width 0.3s ease;
 }
@@ -120,8 +120,8 @@ h1 {
 }
 
 .category-tab.active {
-  background-color: #0a84ff;
-  color: white;
+  background-color: #58E5BB;
+  color: black;
 }
 
 .category-tab[draggable="true"] {
@@ -136,7 +136,7 @@ h1 {
 
 .category-tab.dragover {
   background-color: #333;
-  box-shadow: 0 0 0 2px #0a84ff;
+  box-shadow: 0 0 0 2px #58E5BB;
 }
 
 .category-tab .delete-category {
@@ -162,8 +162,8 @@ h1 {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background-color: #0a84ff;
-  color: white;
+  background-color: #58E5BB;
+  color: black;
   border: none;
   font-size: 18px;
   line-height: 1;
@@ -174,7 +174,7 @@ h1 {
 }
 
 #add-category-btn:hover {
-  background-color: #0a8dff;
+  background-color: #58E5BB;
 }
 
 /* Modal Styles */
@@ -235,13 +235,13 @@ h1 {
 }
 
 #new-category-input:focus {
-  border-color: #0a84ff;
+  border-color: #58E5BB;
 }
 
 #save-category-btn {
   padding: 10px 15px;
-  background-color: #0a84ff;
-  color: white;
+  background-color: #58E5BB;
+  color: black;
   border: none;
   border-radius: 0 6px 6px 0;
   cursor: pointer;
@@ -250,7 +250,7 @@ h1 {
 }
 
 #save-category-btn:hover {
-  background-color: #0a8dff;
+  background-color: #58E5BB;
 }
 
 .task-form {
@@ -273,7 +273,7 @@ h1 {
 }
 
 .task-form input:focus {
-  border-color: #0a84ff;
+  border-color: #58E5BB;
 }
 
 .task-form input:disabled {
@@ -285,8 +285,8 @@ h1 {
 
 #add-task-btn {
   padding: 10px 15px;
-  background-color: #0a84ff;
-  color: white;
+  background-color: #58E5BB;
+  color: black;
   border: none;
   border-radius: 0 6px 6px 0;
   cursor: pointer;
@@ -295,7 +295,7 @@ h1 {
 }
 
 #add-task-btn:hover {
-  background-color: #0a8dff;
+  background-color: #58E5BB;
 }
 
 #add-task-btn:disabled {
@@ -343,8 +343,8 @@ h1 {
 }
 
 .task-checkbox:checked {
-  background-color: #0a84ff;
-  border-color: #0a84ff;
+  background-color: #58E5BB;
+  border-color: #58E5BB;
 }
 
 .task-checkbox:checked::after {
@@ -354,8 +354,8 @@ h1 {
   left: 5px;
   width: 8px;
   height: 5px;
-  border-left: 2px solid white;
-  border-bottom: 2px solid white;
+  border-left: 2px solid black;
+  border-bottom: 2px solid black;
   transform: rotate(-45deg);
 }
 
@@ -424,7 +424,7 @@ h1 {
 
 .move-task:hover {
   opacity: 1;
-  color: #61afef;
+  color: #58E5BB;
 }
 
 .task-actions {
@@ -489,8 +489,8 @@ h1 {
 }
 
 .date-nav-btn.active {
-  background-color: #61afef;
-  color: #1e1e1e;
+  background-color: #58E5BB;
+  color: black;
   font-weight: bold;
 }
 
@@ -585,13 +585,13 @@ h1 {
 }
 
 .current-day {
-  background-color: #61afef;
-  color: #000;
+  background-color: #58E5BB;
+  color: black;
   font-weight: bold;
 }
 
 .active-day {
-  border: 2px solid #61afef;
+  border: 2px solid #58E5BB;
 }
 
 .has-tasks {
@@ -607,7 +607,7 @@ h1 {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background-color: #61afef;
+  background-color: #58E5BB;
 }
 
 .task-complete::after {
@@ -676,8 +676,8 @@ h1 {
 
 .primary-btn {
   padding: 10px 15px;
-  background-color: #0a84ff;
-  color: white;
+  background-color: #58E5BB;
+  color: black;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -687,13 +687,13 @@ h1 {
 }
 
 .primary-btn:hover {
-  background-color: #0a8dff;
+  background-color: #58E5BB;
 }
 
 #move-task-btn {
   padding: 10px 15px;
-  background-color: #0a84ff;
-  color: white;
+  background-color: #58E5BB;
+  color: black;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -703,7 +703,7 @@ h1 {
 }
 
 #move-task-btn:hover {
-  background-color: #0a8dff;
+  background-color: #58E5BB;
 }
 
 /* Calendar Modal */
@@ -859,7 +859,8 @@ h1 {
 }
 
 .move-quick-buttons .date-nav-btn.active {
-  background-color: #007aff;
+  background-color: #58E5BB;
+  color: black;
 }
 
 /* Priority picker dropdown */
@@ -919,7 +920,7 @@ h1 {
 }
 
 .category-option.selected {
-  background-color: #0a84ff33;
+  background-color: #58E5BB33;
 }
 
 .category-tag-clickable {
@@ -980,7 +981,7 @@ h1 {
 
 .focus-timer:focus {
   background-color: #333;
-  box-shadow: 0 0 0 2px #007aff;
+  box-shadow: 0 0 0 2px #58E5BB;
 }
 
 .focus-timer:hover:not(:focus) {
@@ -990,7 +991,7 @@ h1 {
 
 .focus-mode-indicator {
   font-size: 1.5rem;
-  color: #007aff;
+  color: #58E5BB;
   margin-bottom: 1rem;
 }
 
@@ -1037,21 +1038,17 @@ h1 {
 }
 
 #focus-done-btn {
-  background-color: #007aff;
-  color: #fff;
+  background-color: #58E5BB;
+  color: black;
 }
 
 #focus-done-btn:hover {
-  background-color: #0062cc;
+  background-color: #58E5BB;
 }
 
 #focus-cancel-btn {
   background-color: #444;
   color: #fff;
-}
-
-#focus-cancel-btn:hover {
-  background-color: #555;
 }
 
 #focus-cancel-btn:hover {
@@ -1130,8 +1127,8 @@ h1 {
 
 #copy-summary-btn {
   padding: 10px 15px;
-  background-color: #0a84ff;
-  color: white;
+  background-color: #58E5BB;
+  color: black;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -1140,5 +1137,5 @@ h1 {
 }
 
 #copy-summary-btn:hover {
-  background-color: #0a8dff;
+  background-color: #58E5BB;
 }
