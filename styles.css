@@ -886,6 +886,41 @@ h1 {
   cursor: pointer;
 }
 
+/* Category picker dropdown */
+.category-picker {
+  position: absolute;
+  background-color: #2c2c2e;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  display: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.category-picker.show {
+  display: block;
+}
+
+.category-option {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: #f5f5f7;
+}
+
+.category-option:hover {
+  background-color: #3a3a3c;
+}
+
+.category-option.selected {
+  background-color: #0a84ff33;
+}
+
+.category-tag-clickable {
+  cursor: pointer;
+}
+
 /* Focus Modal Styles */
 .focus-modal-content {
   position: fixed;

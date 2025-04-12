@@ -620,13 +620,15 @@ async function renderTasks() {
     // Create category tag (only display if in "All" view or if category doesn't match active category)
     if (activeCategory === 'All' || (task.category && task.category !== activeCategory)) {
       const categoryTag = document.createElement('span');
-      categoryTag.className = 'category-tag';
+      categoryTag.className = 'category-tag category-tag-clickable';
       categoryTag.textContent = task.category || 'Uncategorized';
-      categoryTag.addEventListener('click', () => {
-        if (task.category) {
-          setActiveCategory(task.category);
-        }
+      
+      // Add click handler to show category picker instead of just setting active category
+      categoryTag.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showCategoryPicker(e.target, task.id, task.category);
       });
+      
       tagsContainer.appendChild(categoryTag);
     }
     
@@ -1210,6 +1212,51 @@ function showPriorityPicker(element, taskId) {
   document.addEventListener('click', function closePicker(e) {
     if (!priorityPicker.contains(e.target) && e.target !== element) {
       priorityPicker.remove();
+      document.removeEventListener('click', closePicker);
+    }
+  });
+}
+
+// Function to show category picker
+function showCategoryPicker(element, taskId, currentCategory) {
+  // Remove any existing category pickers
+  document.querySelectorAll('.category-picker').forEach(picker => picker.remove());
+  
+  // Create a category picker container
+  const categoryPicker = document.createElement('div');
+  categoryPicker.className = 'category-picker show';
+  
+  // Create category options
+  categories.forEach(category => {
+    const categoryOption = document.createElement('div');
+    categoryOption.className = 'category-option';
+    categoryOption.textContent = category;
+    categoryOption.addEventListener('click', async () => {
+      await window.taskAPI.updateTaskCategory(taskId, category);
+      await loadTasks();
+      categoryPicker.remove();
+    });
+    
+    // Highlight the current category
+    if (category === currentCategory) {
+      categoryOption.classList.add('selected');
+    }
+    
+    categoryPicker.appendChild(categoryOption);
+  });
+  
+  // Position the picker below the element
+  const rect = element.getBoundingClientRect();
+  categoryPicker.style.top = `${rect.bottom + 5}px`;
+  categoryPicker.style.left = `${rect.left}px`;
+  
+  // Append category picker to document body for proper positioning
+  document.body.appendChild(categoryPicker);
+  
+  // Close picker when clicking outside
+  document.addEventListener('click', function closePicker(e) {
+    if (!categoryPicker.contains(e.target) && e.target !== element) {
+      categoryPicker.remove();
       document.removeEventListener('click', closePicker);
     }
   });

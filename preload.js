@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('taskAPI', {
   deleteTask: (taskId) => ipcRenderer.invoke('delete-task', taskId),
   editTask: (taskId, newText) => ipcRenderer.invoke('edit-task', taskId, newText),
   updateTaskPriority: (taskId, priority) => ipcRenderer.invoke('update-task-priority', taskId, priority),
+  updateTaskCategory: (taskId, category) => ipcRenderer.invoke('update-task-category', taskId, category),
   
   // Category operations
   getCategories: () => ipcRenderer.invoke('get-categories'),

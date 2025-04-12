@@ -494,3 +494,21 @@ ipcMain.handle('update-task-priority', (event, taskId, priority) => {
   
   return getFilteredTasks(activeCategory, activeDate);
 });
+
+// Handler to update task category
+ipcMain.handle('update-task-category', (event, taskId, category) => {
+  const tasks = store.get('tasks');
+  const activeCategory = store.get('activeCategory');
+  const activeDate = store.get('activeDate');
+  
+  const updatedTasks = tasks.map(task => {
+    if (task.id === taskId) {
+      return { ...task, category };
+    }
+    return task;
+  });
+  
+  store.set('tasks', updatedTasks);
+  
+  return getFilteredTasks(activeCategory, activeDate);
+});
