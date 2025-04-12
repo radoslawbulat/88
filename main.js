@@ -286,7 +286,8 @@ ipcMain.handle('add-task', async (event, taskText) => {
     text: taskText,
     completed: false,
     category: activeCategory === 'All' ? null : activeCategory,
-    date: activeDate
+    date: activeDate,
+    priority: 'medium' // Default priority
   };
   
   // Add to store and return updated filtered tasks
@@ -464,3 +465,32 @@ ipcMain.handle('set-categories', (event, newCategories) => {
 });
 
 // Calendar integration - get dates that have tasks
+ipcMain.handle('get-dates-with-tasks', (event, month, year) => {
+  const tasks = store.get('tasks');
+  
+  // Get dates that have tasks for the given month
+  return tasks
+    .filter(task => {
+      const taskDate = new Date(task.date);
+      return taskDate.getMonth() === month && taskDate.getFullYear() === year;
+    })
+    .map(task => task.date);
+});
+
+// Handler to update task priority
+ipcMain.handle('update-task-priority', (event, taskId, priority) => {
+  const tasks = store.get('tasks');
+  const activeCategory = store.get('activeCategory');
+  const activeDate = store.get('activeDate');
+  
+  const updatedTasks = tasks.map(task => {
+    if (task.id === taskId) {
+      return { ...task, priority };
+    }
+    return task;
+  });
+  
+  store.set('tasks', updatedTasks);
+  
+  return getFilteredTasks(activeCategory, activeDate);
+});

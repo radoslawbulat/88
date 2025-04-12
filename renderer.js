@@ -578,14 +578,19 @@ async function renderTasks() {
   const completedTasks = tasks.filter(task => task.completed).length;
   updateProgressBar(completedTasks, tasks.length);
   
-  // Sort tasks: uncompleted tasks first, then completed tasks
-  const sortedTasks = [...tasks].sort((a, b) => {
-    // If one is completed and the other is not, the uncompleted one comes first
+  // Sort tasks by completion status and then by priority (high to low)
+  const sortedTasks = tasks.slice().sort((a, b) => {
+    // First, sort by completion status (completed tasks at the bottom)
     if (a.completed !== b.completed) {
       return a.completed ? 1 : -1;
     }
-    // If both are completed or both are uncompleted, preserve original order
-    return 0;
+    
+    // Then sort by priority (high to low)
+    const priorityOrder = { 'high': 0, 'medium': 1, 'low': 2 };
+    const aPriority = a.priority || 'medium';
+    const bPriority = b.priority || 'medium';
+    
+    return priorityOrder[aPriority] - priorityOrder[bPriority];
   });
   
   // Render each task
@@ -606,6 +611,12 @@ async function renderTasks() {
     const taskContent = document.createElement('div');
     taskContent.className = 'task-content';
     
+    // Create a container for tags (category and priority)
+    const tagsContainer = document.createElement('div');
+    tagsContainer.className = 'tags-container';
+    tagsContainer.style.display = 'flex';
+    tagsContainer.style.gap = '5px';
+    
     // Create category tag (only display if in "All" view or if category doesn't match active category)
     if (activeCategory === 'All' || (task.category && task.category !== activeCategory)) {
       const categoryTag = document.createElement('span');
@@ -616,8 +627,26 @@ async function renderTasks() {
           setActiveCategory(task.category);
         }
       });
-      taskContent.appendChild(categoryTag);
+      tagsContainer.appendChild(categoryTag);
     }
+    
+    // Create priority tag
+    const priorityTag = document.createElement('span');
+    priorityTag.className = 'category-tag priority-tag'; // Using the same style as category tag plus the priority specific class
+    
+    // Capitalize first letter of priority
+    const priorityValue = task.priority || 'medium';
+    const capitalizedPriority = priorityValue.charAt(0).toUpperCase() + priorityValue.slice(1);
+    
+    priorityTag.textContent = capitalizedPriority;
+    priorityTag.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showPriorityPicker(e.target, task.id);
+    });
+    tagsContainer.appendChild(priorityTag);
+    
+    // Add the tags container to task content
+    taskContent.appendChild(tagsContainer);
     
     // Create task text with contenteditable
     const taskText = document.createElement('span');
@@ -732,12 +761,55 @@ async function renderTasks() {
     deleteOption.addEventListener('click', async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      if (confirm('Are you sure you want to delete this task?')) {
-        await deleteTask(task.id);
-      }
+      await deleteTask(task.id);
       closeAllDropdowns();
     });
     dropdownContent.appendChild(deleteOption);
+    
+    // Add Priority options
+    const priorityOption = document.createElement('a');
+    priorityOption.href = '#';
+    priorityOption.textContent = 'Set Priority';
+    dropdownContent.appendChild(priorityOption);
+    
+    // Low priority option
+    const lowPriorityOption = document.createElement('a');
+    lowPriorityOption.href = '#';
+    lowPriorityOption.textContent = '   Low';
+    lowPriorityOption.style.paddingLeft = '25px';
+    lowPriorityOption.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      await updateTaskPriority(task.id, 'low');
+      closeAllDropdowns();
+    });
+    dropdownContent.appendChild(lowPriorityOption);
+    
+    // Medium priority option
+    const mediumPriorityOption = document.createElement('a');
+    mediumPriorityOption.href = '#';
+    mediumPriorityOption.textContent = '   Medium';
+    mediumPriorityOption.style.paddingLeft = '25px';
+    mediumPriorityOption.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      await updateTaskPriority(task.id, 'medium');
+      closeAllDropdowns();
+    });
+    dropdownContent.appendChild(mediumPriorityOption);
+    
+    // High priority option
+    const highPriorityOption = document.createElement('a');
+    highPriorityOption.href = '#';
+    highPriorityOption.textContent = '   High';
+    highPriorityOption.style.paddingLeft = '25px';
+    highPriorityOption.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      await updateTaskPriority(task.id, 'high');
+      closeAllDropdowns();
+    });
+    dropdownContent.appendChild(highPriorityOption);
     
     // Append dropdown elements
     dropdown.appendChild(settingsIcon);
@@ -1079,4 +1151,66 @@ async function moveTaskToNextDay(taskId) {
     // Reload tasks
     await loadTasks();
   }
+}
+
+// Function to update task priority
+async function updateTaskPriority(taskId, priority) {
+  await window.taskAPI.updateTaskPriority(taskId, priority);
+  await loadTasks();
+}
+
+// Function to show priority picker
+function showPriorityPicker(element, taskId) {
+  // Remove any existing priority pickers
+  document.querySelectorAll('.priority-picker').forEach(picker => picker.remove());
+  
+  // Create a priority picker container
+  const priorityPicker = document.createElement('div');
+  priorityPicker.className = 'priority-picker show';
+  
+  // Create priority options
+  const lowPriorityOption = document.createElement('div');
+  lowPriorityOption.className = 'priority-option';
+  lowPriorityOption.textContent = 'Low';
+  lowPriorityOption.addEventListener('click', async () => {
+    await updateTaskPriority(taskId, 'low');
+    priorityPicker.remove();
+  });
+  
+  const mediumPriorityOption = document.createElement('div');
+  mediumPriorityOption.className = 'priority-option';
+  mediumPriorityOption.textContent = 'Medium';
+  mediumPriorityOption.addEventListener('click', async () => {
+    await updateTaskPriority(taskId, 'medium');
+    priorityPicker.remove();
+  });
+  
+  const highPriorityOption = document.createElement('div');
+  highPriorityOption.className = 'priority-option';
+  highPriorityOption.textContent = 'High';
+  highPriorityOption.addEventListener('click', async () => {
+    await updateTaskPriority(taskId, 'high');
+    priorityPicker.remove();
+  });
+  
+  // Append options to priority picker
+  priorityPicker.appendChild(highPriorityOption); // High priority first
+  priorityPicker.appendChild(mediumPriorityOption);
+  priorityPicker.appendChild(lowPriorityOption);
+  
+  // Position the picker below the element
+  const rect = element.getBoundingClientRect();
+  priorityPicker.style.top = `${rect.bottom + 5}px`;
+  priorityPicker.style.left = `${rect.left}px`;
+  
+  // Append priority picker to document body for proper positioning
+  document.body.appendChild(priorityPicker);
+  
+  // Close picker when clicking outside
+  document.addEventListener('click', function closePicker(e) {
+    if (!priorityPicker.contains(e.target) && e.target !== element) {
+      priorityPicker.remove();
+      document.removeEventListener('click', closePicker);
+    }
+  });
 }
