@@ -1139,3 +1139,32 @@ h1 {
 #copy-summary-btn:hover {
   background-color: #58E5BB;
 }
+
+.no-tasks-message {
+  padding: 10px;
+  font-style: italic;
+  color: #777;
+}
+
+.no-tasks-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+}
+
+.no-tasks-image {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 15px;
+  opacity: 0.8;
+}
+
+.no-tasks-container p {
+  font-size: 16px;
+  color: #888;
+  margin: 0;
+}

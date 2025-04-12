@@ -62,6 +62,9 @@ const copySummaryBtn = document.getElementById('copy-summary-btn');
 // Notification sound element
 const notificationSound = document.getElementById('notification-sound');
 
+// Confetti canvas
+const confettiCanvas = document.getElementById('confetti-canvas');
+
 // Application state
 let tasks = [];
 let categories = [];
@@ -92,6 +95,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   await setActiveCategory(activeCategory);
   await loadTasks();
   updateActiveDateButton();
+  initConfettiCanvas();
 });
 
 // Add task when button is clicked
@@ -283,7 +287,33 @@ async function addTask() {
 
 // Function to toggle task completion status
 async function toggleTask(taskId) {
+  const previousTasks = [...tasks];
   tasks = await window.taskAPI.toggleTask(taskId);
+  
+  // If a task was just marked as completed
+  const task = tasks.find(t => t.id === taskId);
+  if (task && task.completed) {
+    // Check if this was the last task for today
+    const todaysTasks = tasks.filter(t => t.date === activeDate);
+    const allCompleted = todaysTasks.every(t => t.completed);
+    const totalTasks = todaysTasks.length;
+    
+    // If all tasks are now completed and there was at least one task, show celebration
+    if (allCompleted && totalTasks > 0) {
+      // Show image and confetti at the same time
+      showCelebrationImage();
+      showConfetti();
+      
+      // Remove the image after 3 seconds
+      setTimeout(() => {
+        const existingImage = document.getElementById('celebration-image');
+        if (existingImage) {
+          document.body.removeChild(existingImage);
+        }
+      }, 3000);
+    }
+  }
+  
   renderTasks();
 }
 
@@ -575,7 +605,26 @@ async function renderTasks() {
   if (tasks.length === 0) {
     const noTasksMessage = document.createElement('li');
     noTasksMessage.className = 'no-tasks-message';
-    noTasksMessage.textContent = 'No tasks for this date and category';
+    
+    // Create a container for the message and image
+    const messageContainer = document.createElement('div');
+    messageContainer.className = 'no-tasks-container';
+    
+    // Add an image above the text
+    const emptyImage = document.createElement('img');
+    emptyImage.src = 'assets/images/teddy.png';
+    emptyImage.alt = 'No tasks';
+    emptyImage.className = 'no-tasks-image';
+    
+    // Add text message
+    const messageText = document.createElement('p');
+    messageText.textContent = 'No tasks for this date and category';
+    
+    // Append elements to container
+    messageContainer.appendChild(emptyImage);
+    messageContainer.appendChild(messageText);
+    noTasksMessage.appendChild(messageContainer);
+    
     taskList.appendChild(noTasksMessage);
     
     updateProgressBar(0, 0);
@@ -1311,4 +1360,123 @@ function showCategoryPicker(element, taskId, currentCategory) {
       document.removeEventListener('click', closePicker);
     }
   });
+}
+
+// CONFETTI IMPLEMENTATION
+const confettiCtx = confettiCanvas.getContext('2d');
+let confettiAnimationId = null;
+const confettiColors = ['#58E5BB', '#FFD700', '#FF6B6B', '#4E94FF', '#BF5FFF'];
+
+// Initialize canvas size
+function initConfettiCanvas() {
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
+}
+
+// Create confetti particles
+function createConfettiParticles(count = 150) {
+  const particles = [];
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * confettiCanvas.width,
+      y: -20 - Math.random() * 100, // Start above the visible area
+      size: Math.random() * 8 + 3,
+      color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+      speed: Math.random() * 3 + 2,
+      rotation: Math.random() * 360,
+      rotationSpeed: Math.random() * 5 - 2.5,
+      angle: Math.random() * 90 - 45, // Random angle for more natural fall
+    });
+  }
+  return particles;
+}
+
+// Animate confetti
+function animateConfetti(particles) {
+  // Clear canvas
+  confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+  
+  let stillActive = false;
+  
+  // Draw and update each particle
+  particles.forEach(p => {
+    confettiCtx.save();
+    confettiCtx.translate(p.x, p.y);
+    confettiCtx.rotate(p.rotation * Math.PI / 180);
+    
+    confettiCtx.fillStyle = p.color;
+    confettiCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+    
+    confettiCtx.restore();
+    
+    // Update position for next frame
+    p.y += p.speed;
+    p.x += Math.sin(p.angle * Math.PI / 180) * 0.8;
+    p.rotation += p.rotationSpeed;
+    
+    // Check if particle is still in view
+    if (p.y < confettiCanvas.height + 20) {
+      stillActive = true;
+    }
+  });
+  
+  // Continue animation if particles are still visible
+  if (stillActive) {
+    confettiAnimationId = requestAnimationFrame(() => animateConfetti(particles));
+  } else {
+    confettiAnimationId = null;
+  }
+}
+
+// Main function to show confetti
+function showConfetti() {
+  // Stop any existing animation
+  if (confettiAnimationId) {
+    cancelAnimationFrame(confettiAnimationId);
+  }
+  
+  // Initialize canvas size
+  initConfettiCanvas();
+  
+  // Create particles
+  const particles = createConfettiParticles();
+  
+  // Start animation
+  animateConfetti(particles);
+}
+
+// Resize canvas when window resizes
+window.addEventListener('resize', initConfettiCanvas);
+
+// Function to show celebration image
+function showCelebrationImage() {
+  // Check if image already exists and remove it
+  const existingImage = document.getElementById('celebration-image');
+  if (existingImage) {
+    document.body.removeChild(existingImage);
+  }
+  
+  // Create image container
+  const imageContainer = document.createElement('div');
+  imageContainer.id = 'celebration-image';
+  imageContainer.style.position = 'fixed';
+  imageContainer.style.top = '50%';
+  imageContainer.style.left = '50%';
+  imageContainer.style.transform = 'translate(-50%, -50%)';
+  imageContainer.style.zIndex = '1500';
+  imageContainer.style.pointerEvents = 'none';
+  
+  // Create image element
+  const image = document.createElement('img');
+  image.src = 'assets/images/aayush.png';
+  image.alt = 'Celebration';
+  image.style.maxWidth = '300px';
+  image.style.maxHeight = '300px';
+  image.style.borderRadius = '10px';
+  
+  // Add image to container
+  imageContainer.appendChild(image);
+  
+  // Add container to body
+  document.body.appendChild(imageContainer);
 }
