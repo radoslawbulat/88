@@ -50,6 +50,15 @@ const focusCancelBtn = document.getElementById('focus-cancel-btn');
 const focusModeIndicator = document.getElementById('focus-mode-indicator');
 const focusSessionCount = document.getElementById('focus-session-count');
 
+// Summary elements
+const summarizeBtn = document.getElementById('summarize-btn');
+const summaryModal = document.getElementById('summary-modal');
+const closeSummaryModal = document.getElementById('close-summary-modal');
+const summaryLoading = document.getElementById('summary-loading');
+const summaryContainer = document.getElementById('summary-container');
+const summaryText = document.getElementById('summary-text');
+const copySummaryBtn = document.getElementById('copy-summary-btn');
+
 // Notification sound element
 const notificationSound = document.getElementById('notification-sound');
 
@@ -872,6 +881,49 @@ function updateOverallProgressBar(completed, total) {
   const progressPercentage = total > 0 ? (completed / total) * 100 : 0;
   overallProgressBar.style.width = `${progressPercentage}%`;
 }
+
+// Open summary modal and generate task summary
+summarizeBtn.addEventListener('click', async () => {
+  summaryModal.classList.add('show');
+  summaryLoading.style.display = 'flex';
+  summaryContainer.style.display = 'none';
+  summaryText.value = '';
+  
+  try {
+    const result = await window.taskAPI.generateTaskSummary();
+    summaryLoading.style.display = 'none';
+    summaryContainer.style.display = 'flex';
+    summaryText.value = result;
+    summaryText.focus();
+  } catch (error) {
+    summaryLoading.style.display = 'none';
+    summaryContainer.style.display = 'flex';
+    summaryText.value = 'Error generating summary: ' + error.message;
+  }
+});
+
+// Close summary modal
+closeSummaryModal.addEventListener('click', () => {
+  summaryModal.classList.remove('show');
+});
+
+// Copy summary to clipboard
+copySummaryBtn.addEventListener('click', () => {
+  // Select the text
+  summaryText.select();
+  
+  // Copy to clipboard
+  document.execCommand('copy');
+  
+  // Show feedback (temporarily change button text)
+  const originalText = copySummaryBtn.textContent;
+  copySummaryBtn.textContent = 'Copied!';
+  
+  // Reset button text after a short delay
+  setTimeout(() => {
+    copySummaryBtn.textContent = originalText;
+  }, 2000);
+});
 
 // Add event listeners for Focus buttons
 focusStartBtn.addEventListener('click', startTimer);

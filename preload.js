@@ -24,5 +24,8 @@ contextBridge.exposeInMainWorld('taskAPI', {
   getActiveDate: () => ipcRenderer.invoke('get-active-date'),
   setActiveDate: (date) => ipcRenderer.invoke('set-active-date', date),
   moveTaskDate: (taskId, newDate) => ipcRenderer.invoke('move-task-date', taskId, newDate),
-  getTasksByDateRange: (startDate, endDate) => ipcRenderer.invoke('get-tasks-by-date-range', startDate, endDate)
+  getTasksByDateRange: (startDate, endDate) => ipcRenderer.invoke('get-tasks-by-date-range', startDate, endDate),
+  
+  // Summary operations
+  generateTaskSummary: () => ipcRenderer.invoke('generate-task-summary')
 });

@@ -512,3 +512,56 @@ ipcMain.handle('update-task-category', (event, taskId, category) => {
   
   return getFilteredTasks(activeCategory, activeDate);
 });
+
+// Task summary generator
+async function generateTaskSummary() {
+  try {
+    // Get today's date
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Get tomorrow's date
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowFormatted = tomorrow.toISOString().split('T')[0];
+    
+    // Get tasks for today and tomorrow
+    const tasks = store.get('tasks');
+    const todayTasks = tasks.filter(task => task.date === today);
+    const tomorrowTasks = tasks.filter(task => task.date === tomorrowFormatted);
+    
+    // Get completed tasks for today
+    const completedTasks = todayTasks.filter(task => task.completed);
+    
+    // Generate the summary in the requested format
+    let summaryText = 'Today:\n';
+    
+    if (completedTasks.length > 0) {
+      completedTasks.forEach(task => {
+        summaryText += `- ${task.text}\n`;
+      });
+    } else {
+      summaryText += 'No tasks completed today\n';
+    }
+    
+    summaryText += '\nTomorrow:\n';
+    
+    if (tomorrowTasks.length > 0) {
+      tomorrowTasks.forEach(task => {
+        summaryText += `- ${task.text}\n`;
+      });
+    } else {
+      summaryText += 'No tasks planned for tomorrow\n';
+    }
+    
+    summaryText += '\nBlockers: none';
+    
+    return summaryText;
+  } catch (error) {
+    console.error('Error generating task summary:', error);
+    return 'Failed to generate task summary.';
+  }
+}
+
+ipcMain.handle('generate-task-summary', async (event) => {
+  return await generateTaskSummary();
+});

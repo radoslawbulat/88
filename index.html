@@ -10,7 +10,10 @@
   <div class="container">
     <div class="header">
       <h1>GSD 🔥</h1>
-      <button id="calendar-btn" class="calendar-toggle-btn" title="Open Calendar">📅</button>
+      <div class="header-buttons">
+        <button id="summarize-btn" class="header-btn" title="Summarize Tasks">📋</button>
+        <button id="calendar-btn" class="calendar-toggle-btn" title="Open Calendar">📅</button>
+      </div>
     </div>
     
     <!-- Current date display (no interaction) -->
@@ -141,6 +144,26 @@
       <div class="focus-actions">
         <button id="focus-done-btn" class="focus-action-btn">Done</button>
         <button id="focus-cancel-btn" class="focus-action-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Summary modal -->
+  <div class="modal" id="summary-modal">
+    <div class="modal-content summary-modal-content">
+      <span class="close-button" id="close-summary-modal">&times;</span>
+      <h2>Daily Summary</h2>
+      <div class="summary-content">
+        <div id="summary-loading" class="summary-loading">
+          <p>Generating summary...</p>
+          <div class="loader"></div>
+        </div>
+        <div id="summary-container" class="summary-container">
+          <textarea id="summary-text" class="summary-text" spellcheck="true"></textarea>
+          <div class="summary-actions">
+            <button id="copy-summary-btn">Copy to Clipboard</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
